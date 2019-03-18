@@ -1,0 +1,205 @@
+
+
+    <-----------------------------接口用法------------------------------->
+           多个服务器地址 需要加Headers来设置一个头名字来区分不同的服务器地址  具体的区分方式在RetrofitUtil
+           类中去看，如果不需要可以不， 把应用拦截去掉即可！
+        @Headers({"urlname:kangso"})
+
+
+  //注册
+    @FormUrlEncoded
+    @POST("app/register")
+    Observable<LoginBean> register(@FieldMap Map<String, String> params);
+
+    //获取验证码
+    @POST("app/sendCode")
+    Observable<EvaluteBean> getSendcode(@Query("telephone") String params);
+
+    //登陆
+    @FormUrlEncoded
+    @POST("app/login")
+    Observable<LoginBean> login(@FieldMap Map<String, String> params, @Query("type") int type);
+
+
+    @GET("api/mp/chatted/{tel}")
+    Observable<ChattedBean> chatted(@Path("tel") String tel);
+
+    //1----1
+    @GET("api/pkg")
+    Observable<StockPkgBean> selectpkg(@Query("name") String params
+            , @Query("currpage") int currpage);
+     //上传图片
+    @Multipart
+    @POST("api/common/upload")
+    Observable<EvaluteBeans> uploadImage(@Query("telephone") String telephone,
+                                         @Query("orderId") String orderId,
+                                         @Part List<MultipartBody.Part> file);
+
+
+    <-------------------------------接口请求方法----------------------------->
+        /*//注册
+        public void register(Map<String, String> map, Observer<LoginBean> observer) {
+            getInstance().mApiService.register(map).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer);
+        }
+        //登陆
+        public void login(Map<String, String> map,int type, Observer<LoginBean> observer) {
+            getInstance().mApiService.login(map,type).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer);
+        }
+           //获取验证码
+           public void getSendcode(String id, Observer<EvaluteBean> observer) {
+               getInstance().mApiService.getSendcode(id).subscribeOn(Schedulers.io())
+                       .observeOn(AndroidSchedulers.mainThread())
+                       .subscribe(observer);
+           }
+
+            //上传图片
+        public void chatImage(String docTel, String from, String tid, List<MultipartBody.Part> file, Observer<EvaluteBean> observer) {
+            getInstance().mApiService.chatImage(docTel, from, tid, file).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer);
+        }
+
+
+        /*
+        上传图片的方法
+        private void sendPictures(String paht) {
+
+                List<MultipartBody.Part> parts = new ArrayList<>();
+                File file = new File(paht);
+                //表单类型;
+                Logger.e(file.getPath() + "==========lujing========-");
+                RequestBody imageBody = RequestBody.create(MediaType.parse("image/*"), file);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), imageBody);
+                parts.add(body);
+
+
+
+                  //壓縮图片
+                  File newFile = CompressHelper.getDefault(this).compressToFile(file);
+                */
+
+       <-------------------------------进度框的使用方法----------------------------->
+       promptDialog = new PromptDialog(this);
+       promptDialog.showLoading("正在登录");
+
+       /********************消息提示框*************/
+       promptDialog.showSuccess("登陆成功");
+       promptDialog.showError("登录失败");
+       promptDialog.showWarn("注意");
+       promptDialog.showInfo("成功了");
+       promptDialog.showCustom(R.mipmap.ic_launcher, "自定义图标的");
+       promptDialog.dismiss();
+       promptDialog.dismissImmediately();
+       //具体方法详情：：：： https://github.com/limxing/Android-PromptDialog
+
+
+
+       //数据库 使用说明：
+       //建表必须继承LitePalSupport
+      public class Bean extends LitePalSupport {
+           //运用注解来为字段添加index标签
+           //name是唯一的，且默认值为unknown
+           @Column(unique = true, defaultValue = "unknown")
+           private String name;
+           //忽略即是不在数据库中创建该属性对应的字段
+           @Column(ignore = true)
+           private String sex;
+           //不为空
+           @Column(nullable = false)
+           private String ids;
+
+
+          /*   //添加数据
+                Bean bean = new Bean();
+                bean.setName("张三");
+                bean.setIds("054");
+                bean.save();
+
+              //删除数据
+                //删除数据库中bean表的所有记录
+                LitePal.deleteAll(Bean.class);
+                //删除数据库Bean表中id为1的记录
+                LitePal.delete(Bean.class,1);
+                //删除数据库Bean表中duration大于3500的记录
+                LitePal.deleteAll(Bean.class, "ids > ?" , "2");
+
+                //修改数据
+                //第一种方法
+                bean.setName("李四");
+                bean.save();
+                //第二种方法
+                bean.setName("wangwu");
+                bean.update(1);
+                //第三种方法
+                bean.setName("hjkllll");
+                //更新所有name为sdfdf的记录,将name字段设为hjkllll
+                bean.updateAll("name=?","sdfdf");
+
+                //查询数据
+                //查找movie表的所有记录
+                List<Bean> allMovies = LitePal.findAll(Bean.class);
+                Log.e("-=============", allMovies.toString());
+                //查找movie表id为1的记录
+                Bean movie = LitePal.find(Bean.class,1);
+                //查找name为2Diots的记录,条件查询，以时长作排序
+                List<Bean> movies = LitePal.where("name = ?", "2Diots").order("duration").find(Bean.class);*/
+
+
+
+
+                //底部彈窗
+                private void bottomWindow() {
+
+                    bottomShareMenu = new BottomShareMenu(this) {
+
+                        private RecyclerView recyclerView;
+                        private BottomWindowAdapter adapter;
+                        private Button bt_bittomwindow_commit;
+
+                        @Override
+                        protected View onBindView() {
+                            View inflate = getLayoutInflater().inflate(R.layout.bottomwindow_dialog, null);
+                            recyclerView = inflate.findViewById(R.id.rl_bittomwindow);
+                            bt_bittomwindow_commit = inflate.findViewById(R.id.bt_bittomwindow_commit);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(DiagnosisAssistantAcyivity.this));
+                            return inflate;
+                        }
+
+                        @Override
+                        protected void setData() {
+                            adapter = new BottomWindowAdapter(R.layout.bottomwindow_item,
+                                    windowId);
+                            adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                                @Override
+                                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                                    switch (view.getId()) {
+                                        case R.id.im_bottomwindow_delete:
+                                            windowId.remove(position);
+                                            hopId.remove(position);
+                                            if (index == 0) {
+                                                assistantSelectOne(et_diagnosisassistant_content.getText().toString().trim());
+                                            } else {
+                                                assistantSelectTwo(et_diagnosisassistant_content2.getText().toString().trim());
+                                            }
+                                            tv_relatedproducts_sum.setText("已选（" + windowId.size() + "）");
+                                            adapter.notifyItemRemoved(position);
+                                            break;
+                                    }
+                                }
+                            });
+                            bt_bittomwindow_commit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    bottomShareMenu.dismiss();
+                                }
+                            });
+                        }
+
+                    };
+                }
